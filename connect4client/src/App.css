@@ -2,10 +2,7 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -14,7 +11,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #727d92;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,4 +32,18 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.boardTable td {
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
+  margin: 0;
+  width: 2em;
+  height: 2em;
+}
+
+.boardTable {
+  border-spacing: 0;
+  border-width: 1px;
 }
