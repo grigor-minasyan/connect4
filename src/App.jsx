@@ -1,5 +1,5 @@
-import React from 'react';
-import Board from './Board';
+import React, {Component} from 'react';
+import Board from './Board.jsx';
 class App extends React.Component {
     render() {
         return(

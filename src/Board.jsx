@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 const RED = 1;
 const YELLOW = 2;
-const EMPTY = 0;
+const EMPTY = ' ';
 const WINCONDITION = 4; // is it connect4? or connect5???
 
 class Board extends React.Component {
@@ -15,23 +15,14 @@ class Board extends React.Component {
             turn : RED,
             boardArr : new Array(width).fill(new Array(height).fill(EMPTY))
         }
-        this.addNum = this.addNum.bind(this);
-        this.insertIntoBoard = this.insertIntoBoard.bind(this);
-        this.checkIfWinning = this.checkIfWinning.bind(this);
-        this.createTable = this.createTable.bind(this);
-        
     }
 
-    addNum = (e) => {
-        console.log(e);
+
+    insertIntoBoard = (e) => {
         const col = Number(e.target.getAttribute('col'));
-        this.insertIntoBoard(col);
-    }
-
-    insertIntoBoard = (col) => {
         const copiedArr = JSON.parse(JSON.stringify(this.state.boardArr));
         for (let i = 0; i < this.state.height; i++) {
-            if (copiedArr[col][i] === 0) {
+            if (copiedArr[col][i] === EMPTY) {
                 copiedArr[col][i] = this.state.turn;
                 this.setState({
                     turn: (this.state.turn === RED ? YELLOW : RED),
@@ -43,10 +34,10 @@ class Board extends React.Component {
     }
     componentDidUpdate = () => {
         console.log(this.checkIfWinning());
-
     }
     componentDidMount = () => {
-        console.log(this.checkIfWinning());
+        // console.log(this.checkIfWinning());
+        
 
     }
 
@@ -137,13 +128,13 @@ class Board extends React.Component {
             }
             table.push(<tr row={rowNum} key={`row-${rowNum}`}>{children}</tr>);
         }
-        return <table className='boardTable' onClick={this.addNum}><tbody>{table}</tbody></table>;
+        return <table className='boardTable' onClick={this.insertIntoBoard}><tbody>{table}</tbody></table>;
     }
 
     render() {
-        console.log(this.state);
+        // console.log(this.state);
         return (
-            <div onClick={() => console.log('test if onclick works')}>
+            <div>
                 {this.createTable()}
             </div>
         );

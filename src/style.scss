@@ -9,29 +9,36 @@ body {
 
   
 .main {
-    background-color: #727d92;
+    background-color: #e9e9e9;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: calc(10px + 2vmin);
-    color: white;
+    color: black;
 }
 
 
 .boardTable td {
-    border-width: 1px;
+    border-width: 5px;
     border-style: solid;
-    border-color: white;
+    // border-color: white;
+    border-image: repeating-linear-gradient(45deg, #7360df, #8676e0, #7360df 50px) 30;
+    // border-image-repeat: repeat;
     margin: 0;
-    width: 2em;
-    height: 2em;
+    width: max(2em, 50px);
+    height: max(2em, 50px);
+    box-shadow: inset 0.2em 0.2em 0.4em rgb(175, 175, 175);
+
 }
 
 .boardTable {
+    border-width: 5px;
+    border-style: solid;
+    border-image: repeating-linear-gradient(45deg, #7360df, #8676e0, #7360df 50px) 30;
     border-spacing: 0;
-    border-width: 1px;
     text-align: center;
+    box-shadow: 0.2em 0.2em 0.4em rgb(175, 175, 175);
 }
   
