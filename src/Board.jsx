@@ -1,19 +1,24 @@
 import React from 'react';
+import aiConnect4 from './ai';
+
+const WIDTH = 6;
+const HEIGHT = 5;
 const RED = 1;
 const YELLOW = 2;
 const EMPTY = ' ';
 const WINCONDITION = 4; // is it connect4? or connect5???
+const yellowPieceImgSrc = './static/yellow_piece.png';
+const redPieceImgSrc = './static/red_piece.png';
 
 class Board extends React.Component {
     constructor(props) {
         super(props);
-        const width = 7;
-        const height = 6;
         this.state = {
-            width,
-            height,
+            width: WIDTH,
+            height: HEIGHT,
             turn : RED,
-            boardArr : new Array(width).fill(new Array(height).fill(EMPTY))
+            boardAi : new aiConnect4(RED, YELLOW, EMPTY, WINCONDITION, WIDTH, HEIGHT),
+            boardArr : new Array(WIDTH).fill(new Array(HEIGHT).fill(EMPTY))
         }
     }
 
@@ -21,19 +26,27 @@ class Board extends React.Component {
     insertIntoBoard = (e) => {
         const col = Number(e.target.getAttribute('col'));
         const copiedArr = JSON.parse(JSON.stringify(this.state.boardArr));
+
         for (let i = 0; i < this.state.height; i++) {
             if (copiedArr[col][i] === EMPTY) {
-                copiedArr[col][i] = this.state.turn;
-                this.setState({
-                    turn: (this.state.turn === RED ? YELLOW : RED),
-                    boardArr : copiedArr
-                })
-                return;
+                if (this.state.turn === RED || true) { // human player
+                    copiedArr[col][i] = this.state.turn;
+                    this.setState({
+                        turn: (this.state.turn === RED ? YELLOW : RED),
+                        boardArr : copiedArr
+                    })
+
+                    console.log(this.state.boardAi.minmaxOuter(copiedArr, YELLOW));
+                    return;
+                } else { // ai player
+                    this.state.boardAi.minimax(this.state.boardArr, 10, true);
+                }
             }
         }
     }
     componentDidUpdate = () => {
-        console.log(this.checkIfWinning());
+        // console.log(this.checkIfWinning());
+        // console.log(this.state.boardArr);
     }
     componentDidMount = () => {
         // console.log(this.checkIfWinning());
@@ -42,77 +55,7 @@ class Board extends React.Component {
     }
 
     checkIfWinning = () => {
-        const boardArr = this.state.boardArr;
-        for (let i = 0; i < boardArr.length; i++) {
-            for (let j = 0; j < boardArr[i].length; j++) {
-                //ignore the empty ones
-                if (boardArr[i][j] === EMPTY) {
-                    continue;
-                }
-
-                //check the whole column
-                if (j <= boardArr[i].length - WINCONDITION) {
-                    let isWinning = true;
-                    for (let k = 0; k < WINCONDITION; k++) {
-                        if (boardArr[i][j] !== boardArr[i][j+k]) isWinning = false;
-                    }
-                    if (isWinning) {
-                        return {
-                            isWinning,
-                            player: boardArr[i][j]
-                        }
-                    }
-                }
-
-                //check rows
-                if (i <= boardArr.length - WINCONDITION) {
-                    let isWinning = true;
-                    for (let k = 0; k < WINCONDITION; k++) {
-                        if (boardArr[i][j] !== boardArr[i+k][j]) isWinning = false;
-                    }
-                    if (isWinning) {
-                        return {
-                            isWinning,
-                            player: boardArr[i][j]
-                        }
-                    }
-                }
-
-                //check diagonal 1
-                if (i <= boardArr.length - WINCONDITION && j <= boardArr[i].length - WINCONDITION) {
-                    let isWinning = true;
-                    for (let k = 0; k < WINCONDITION; k++) {
-                        if (boardArr[i][j] !== boardArr[i+k][j+k]) isWinning = false;
-                    }
-                    if (isWinning) {
-                        return {
-                            isWinning,
-                            player: boardArr[i][j]
-                        }
-                    }
-                }
-
-                //check diagonal 2
-                if (i <= boardArr.length - WINCONDITION && j >= WINCONDITION - 1) {
-                    let isWinning = true;
-                    for (let k = 0; k < WINCONDITION; k++) {
-                        if (boardArr[i][j] !== boardArr[i+k][j-k]) isWinning = false;
-                    }
-                    if (isWinning) {
-                        return {
-                            isWinning,
-                            player: boardArr[i][j]
-                        }
-                    }
-                }
-
-            }
-        }
-
-        return {
-            isWinning : false,
-            player: EMPTY
-        }
+        return this.state.boardAi.checkIfWinning(this.state.boardArr);
 
     }
 
@@ -124,15 +67,26 @@ class Board extends React.Component {
             for (let j = 0; j < this.state.width; j++) {
                 const colNum = j;
                 const keyIdName = `cell-${colNum}-${rowNum}`;
-                children.push(<td col={colNum} row={rowNum} key={keyIdName} id={keyIdName} >{this.state.boardArr[colNum][rowNum]}</td>)
+                let bgImageSrc;
+                if (this.state.boardArr[colNum][rowNum] === RED) {
+                    bgImageSrc = <img src={redPieceImgSrc} width='95%' height='95%'/>; // TODO fix styling
+                } else if (this.state.boardArr[colNum][rowNum] === YELLOW) {
+                    bgImageSrc = <img src={yellowPieceImgSrc}  width='95%' height='95%'/>;
+                } else {
+                    bgImageSrc = EMPTY;
+                }
+                children.push(<td col={colNum} row={rowNum} key={keyIdName} id={keyIdName} >
+                        
+                        {bgImageSrc}
+                    </td>)
             }
             table.push(<tr row={rowNum} key={`row-${rowNum}`}>{children}</tr>);
         }
+        // TODO change onclick to more specific button
         return <table className='boardTable' onClick={this.insertIntoBoard}><tbody>{table}</tbody></table>;
     }
 
     render() {
-        // console.log(this.state);
         return (
             <div>
                 {this.createTable()}

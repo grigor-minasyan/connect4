@@ -11,35 +11,35 @@ module.exports = {
    },
    devServer: {
       historyApiFallback: true,
-      contentBase: path.resolve(__dirname, './dist'),
+      contentBase: [path.resolve(__dirname, '/build'), path.resolve(__dirname + '/public') ],
    },
    module: {
       rules: [
         {
-            test: /\.jsx?/,
-            exclude: /node_modules/,
-            use: {
-                loader: 'babel-loader',
-                options: {
-                    presets: [
-                        '@babel/preset-env',
-                        '@babel/preset-react'
-                    ]
-                }
+          test: /\.jsx?/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react'
+              ]
             }
+          }
         },
         {
-            test: /\.s[ac]ss$/i,
-            use: [
-                'style-loader',
-                'css-loader',
-                'sass-loader'
-            ]
+          test: /\.s[ac]ss$/i,
+          use: [
+            'style-loader',
+            'css-loader',
+            'sass-loader'
+          ]
         },
-         {
-            test: /\.(png|j?g|svg|gif)?$/,
-            use: 'file-loader'
-         }
+        {
+          test: /\.(png|j?g|svg|gif)?$/,
+          use: 'file-loader?name=./src/static/[name].[ext]'
+        }
       ]
    },
    resolve: {
