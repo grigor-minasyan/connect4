@@ -6,7 +6,7 @@ class aiConnect4 {
         this.WINCONDITION = WINCONDITION;
         this.width = width;
         this.height = height;
-
+        this.MAXDEPTH = 7;
 
     };
 
@@ -104,8 +104,6 @@ class aiConnect4 {
 
             if (depth === 0 || this.isTerminalNode(board)) {
                 const calcScore = this.scoreCalculator(board, aiPlayer);
-                // console.log(board);
-                // console.log(calcScore);
                 return {
                     score : calcScore,
                     prevMove : prevMove
@@ -117,10 +115,11 @@ class aiConnect4 {
                 prevMove: -1,
             }
             const availableTurns = this.getAvailableTurns(board);
-            // console.log(availableTurns);
             for (const col of availableTurns) {
                 const childResult = minimaxInner(this.dropPieceRetCopy(board, col, player), aiPlayer, depth-1, !isMaxPlayer, col, alpha, beta);
-                // console.log(childResult);
+                if (depth === this.MAXDEPTH) {
+                    console.log(childResult);
+                }
                 if (isMaxPlayer) {
                     if (scoreObj.score < childResult.score) {
                         scoreObj.score = childResult.score;
@@ -142,7 +141,7 @@ class aiConnect4 {
     
         }
         // return [board, aiPlayer, 10, true];
-        return minimaxInner(board, aiPlayer, 7, false, -1, -Infinity, Infinity);
+        return minimaxInner(board, aiPlayer, this.MAXDEPTH, true, -1, -Infinity, Infinity);
         // return this.scoreCalculator(board, aiPlayer);
     }
 
@@ -150,31 +149,6 @@ class aiConnect4 {
         if (this.checkIfWinning(board).isWinning) return true;
         return board.every(el => el[this.height-1] !== this.EMPTY);
     }
-
-
-
-    // scoreCalculator2 = (board, player) => {
-    //     const scoreWindow = (window, piece) => {
-    //         let score = 0;
-    //         const opp_piece = (piece === this.RED ? this.YELLOW : this.RED);
-
-    //         if (window.filter(x => x === piece).length === 4) score += 100;
-    //         if (window.filter(x => x === piece).length === 3 && window.filter(x => x === this.EMPTY).length === 1) score += 10;
-    //         if (window.filter(x => x === piece).length === 2 && window.filter(x => x === this.EMPTY).length === 2) score += 4;
-    //         if (window.filter(x => x === opp_piece).length === 4) score -= 100;
-    //         if (window.filter(x => x === opp_piece).length === 3 && window.filter(x => x === this.EMPTY).length === 1) score -= 10;
-    //         if (window.filter(x => x === opp_piece).length === 2 && window.filter(x => x === this.EMPTY).length === 2) score -= 4;
-            
-    //         return score;
-    //     }
-
-    //     let score = 0;
-
-    //     // Score Horizontal
-
-
-
-    // }
 
 
     scoreCalculator = (board, player) => {
@@ -191,46 +165,58 @@ class aiConnect4 {
                     }
 
                     //check the whole column
-                    if (j <= board[i].length - winCond) {
+                    if (j <= board[i].length - this.WINCONDITION) {
                         let isWinning = true;
-                        for (let k = 0; k < winCond; k++) {
+                        for (let k = 0; k < winCond; k++) { // check player count 
                             if (board[i][j] !== board[i][j+k]) isWinning = false;
                         }
+                        for (let k = winCond; k < this.WINCONDITION; k++) {  // check empty count 
+                            if (board[i][j+k] !== this.EMPTY) isWinning = false;
+                        }
                         if (isWinning) {
-                            score += ((board[i][j] === player ? 1 : -1) * winCond**(2*winCond));
+                            score += ((board[i][j] === player ? 1 : -2) * winCond**(2*winCond));
                         }
                     }
 
                     //check rows
-                    if (i <= board.length - winCond) {
+                    if (i <= board.length - this.WINCONDITION) {
                         let isWinning = true;
                         for (let k = 0; k < winCond; k++) {
                             if (board[i][j] !== board[i+k][j]) isWinning = false;
                         }
+                        for (let k = winCond; k < this.WINCONDITION; k++) {  // check empty count 
+                            if (board[i+k][j] !== this.EMPTY) isWinning = false;
+                        }
                         if (isWinning) {
-                            score += ((board[i][j] === player ? 1 : -1) * winCond**(2*winCond));
+                            score += ((board[i][j] === player ? 1 : -2) * winCond**(2*winCond));
                         }
                     }
 
                     //check diagonal 1
-                    if (i <= board.length - winCond && j <= board[i].length - (2*winCond)) {
+                    if (i <= board.length - this.WINCONDITION && j <= board[i].length - this.WINCONDITION) {
                         let isWinning = true;
                         for (let k = 0; k < winCond; k++) {
                             if (board[i][j] !== board[i+k][j+k]) isWinning = false;
                         }
+                        for (let k = winCond; k < this.WINCONDITION; k++) {  // check empty count 
+                            if (board[i+k][j+k] !== this.EMPTY) isWinning = false;
+                        }
                         if (isWinning) {
-                            score += ((board[i][j] === player ? 1 : -1) * winCond**(2*winCond));
+                            score += ((board[i][j] === player ? 1 : -2) * winCond**(2*winCond));
                         }
                     }
 
                     //check diagonal 2
-                    if (i <= board.length - winCond && j >= winCond - 1) {
+                    if (i <= board.length - this.WINCONDITION && j >= this.WINCONDITION - 1) {
                         let isWinning = true;
                         for (let k = 0; k < winCond; k++) {
                             if (board[i][j] !== board[i+k][j-k]) isWinning = false;
                         }
+                        for (let k = winCond; k < this.WINCONDITION; k++) {  // check empty count 
+                            if (board[i+k][j-k] !== this.EMPTY) isWinning = false;
+                        }
                         if (isWinning) {
-                            score += ((board[i][j] === player ? 1 : -1) * winCond**(2*winCond));
+                            score += ((board[i][j] === player ? 1 : -2) * winCond**(2*winCond));
                         }
                     }
                 }

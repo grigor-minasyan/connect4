@@ -37,41 +37,49 @@ class Board extends React.Component {
                     })
                     return;
                 } else { // ai player
-                    const aiRetObj = this.state.boardAi.minimax(copiedArr, YELLOW);
-                    const aiMove = aiRetObj.prevMove;
-                    console.log(aiRetObj);
-                    
-                    let index = 0;
-                    while(index < copiedArr[aiMove].length) {
-                        if (copiedArr[aiMove][index] === EMPTY) {
-                            break;
-                        }
-                        index++;
-                    }
-                    copiedArr[aiMove][index] = this.state.turn;
-                    this.setState({
-                        turn: (this.state.turn === RED ? YELLOW : RED),
-                        boardArr : copiedArr
-                    });
-                    return;
                     
                 }
             }
         }
     }
     componentDidUpdate = () => {
-        // console.log(this.checkIfWinning());
-        // console.log(this.state.boardArr);
+        const checkIfWinningReturn = this.state.boardAi.checkIfWinning(this.state.boardArr);
+        if (checkIfWinningReturn.isWinning) {
+            console.log(`${checkIfWinningReturn.player} won`);
+
+            this.setState({
+                turn: RED,
+                boardArr : new Array(WIDTH).fill(new Array(HEIGHT).fill(EMPTY))
+            })
+            return;
+        }
+        if (this.state.turn === YELLOW) {
+            this.moveAI();
+            return;
+        }
     }
     componentDidMount = () => {
-        // console.log(this.checkIfWinning());
-        
+
 
     }
 
     checkIfWinning = () => {
         return this.state.boardAi.checkIfWinning(this.state.boardArr);
 
+    }
+
+    moveAI = () => {
+
+        const aiRetObj = this.state.boardAi.minimax(this.state.boardArr, YELLOW);
+        const aiMove = aiRetObj.prevMove;
+
+        console.log(aiRetObj);
+
+        this.setState({
+            turn: (this.state.turn === RED ? YELLOW : RED),
+            boardArr : this.state.boardAi.dropPieceRetCopy(this.state.boardArr, aiMove, this.state.turn)
+        });
+        return;
     }
 
     createTable = () => {
