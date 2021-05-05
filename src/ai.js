@@ -142,7 +142,7 @@ class aiConnect4 {
     
         }
         // return [board, aiPlayer, 10, true];
-        return minimaxInner(board, aiPlayer, 7, true, -1, -Infinity, Infinity);
+        return minimaxInner(board, aiPlayer, 7, false, -1, -Infinity, Infinity);
         // return this.scoreCalculator(board, aiPlayer);
     }
 
