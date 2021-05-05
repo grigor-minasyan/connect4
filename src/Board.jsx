@@ -1,8 +1,8 @@
 import React from 'react';
 import aiConnect4 from './ai';
 
-const WIDTH = 6;
-const HEIGHT = 5;
+const WIDTH = 7;
+const HEIGHT = 6;
 const RED = 1;
 const YELLOW = 2;
 const EMPTY = ' ';
@@ -29,17 +29,32 @@ class Board extends React.Component {
 
         for (let i = 0; i < this.state.height; i++) {
             if (copiedArr[col][i] === EMPTY) {
-                if (this.state.turn === RED || true) { // human player
+                if (this.state.turn === RED) { // human player
                     copiedArr[col][i] = this.state.turn;
                     this.setState({
                         turn: (this.state.turn === RED ? YELLOW : RED),
                         boardArr : copiedArr
                     })
-
-                    console.log(this.state.boardAi.minmaxOuter(copiedArr, YELLOW));
                     return;
                 } else { // ai player
-                    this.state.boardAi.minimax(this.state.boardArr, 10, true);
+                    const aiRetObj = this.state.boardAi.minimax(copiedArr, YELLOW);
+                    const aiMove = aiRetObj.prevMove;
+                    console.log(aiRetObj);
+                    
+                    let index = 0;
+                    while(index < copiedArr[aiMove].length) {
+                        if (copiedArr[aiMove][index] === EMPTY) {
+                            break;
+                        }
+                        index++;
+                    }
+                    copiedArr[aiMove][index] = this.state.turn;
+                    this.setState({
+                        turn: (this.state.turn === RED ? YELLOW : RED),
+                        boardArr : copiedArr
+                    });
+                    return;
+                    
                 }
             }
         }
