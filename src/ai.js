@@ -6,11 +6,9 @@ class aiConnect4 {
         this.WINCONDITION = WINCONDITION;
         this.width = width;
         this.height = height;
-        this.MAXDEPTH = 7;
+        this.MAXDEPTH = 6;
 
     };
-
-
 
     checkIfWinning = (boardArr, winCond = this.WINCONDITION) => {
         for (let i = 0; i < boardArr.length; i++) {
@@ -84,15 +82,12 @@ class aiConnect4 {
         }
     }
 
-
     checkIfValidBoard = (board) => {
         if (board.length !== this.width) return false;
         return board.every(el => el.length === this.height);
     }
 
-
-    minimax = (board, aiPlayer) => {
-        
+    minimax = (board, aiPlayer) => {        
         if (!this.checkIfValidBoard(board)) {
             throw ('not a valid board');
         }
@@ -109,17 +104,16 @@ class aiConnect4 {
                     prevMove : prevMove
                 };
             }
+            const availableTurns = this.getAvailableTurns(board);
 
             let scoreObj = {
                 score: (isMaxPlayer ? -Infinity : Infinity),
                 prevMove: -1,
             }
-            const availableTurns = this.getAvailableTurns(board);
+
             for (const col of availableTurns) {
-                const childResult = minimaxInner(this.dropPieceRetCopy(board, col, player), aiPlayer, depth-1, !isMaxPlayer, col, alpha, beta);
-                if (depth === this.MAXDEPTH) {
-                    console.log(childResult);
-                }
+                const newBoard = this.dropPieceRetCopy(board, col, player);
+                const childResult = minimaxInner(newBoard, aiPlayer, depth-1, !isMaxPlayer, col, alpha, beta);
                 if (isMaxPlayer) {
                     if (scoreObj.score < childResult.score) {
                         scoreObj.score = childResult.score;
@@ -133,15 +127,12 @@ class aiConnect4 {
                     }
                     beta = Math.min(beta, scoreObj.score);
                 }
-                if (alpha >= beta) {
-                    break;
-                }
+                if (alpha >= beta) break;
             }
             return scoreObj;
-    
         }
         // return [board, aiPlayer, 10, true];
-        return minimaxInner(board, aiPlayer, this.MAXDEPTH, true, -1, -Infinity, Infinity);
+        return minimaxInner(board, aiPlayer, this.MAXDEPTH, false, -1, -Infinity, Infinity);
         // return this.scoreCalculator(board, aiPlayer);
     }
 
@@ -153,77 +144,61 @@ class aiConnect4 {
 
     scoreCalculator = (board, player) => {
     
+        const oppPlayer = (player === this.RED ? this.YELLOW : this.RED);
+        const arrScoreCalc = (arr) => {
+            const playerCount = arr.filter(e => e === player).length;
+            const oppCount = arr.filter(e => e === oppPlayer).length;
+            const emptyCount = arr.filter(e => e === this.EMPTY).length;
+            let score = 0;
+            if (playerCount === this.WINCONDITION) score += 11000;
+            if (playerCount === this.WINCONDITION - 1 && emptyCount === 1) score += 110;
+            if (playerCount === this.WINCONDITION - 2 && emptyCount === 2) score += 11;
+            if (oppCount === this.WINCONDITION) score -= 11000;
+            if (oppCount === this.WINCONDITION - 1 && emptyCount === 1) score -= 110;
+            if (oppCount === this.WINCONDITION - 2 && emptyCount === 2) score -= 11;
+            return score;
+        }
 
         let score = 0;
 
-        for (let winCond = this.WINCONDITION; winCond > 1; winCond--) {
-            for (let i = 0; i < board.length; i++) {
-                for (let j = 0; j < board[i].length; j++) {
-                    //ignore the empty ones
-                    if (board[i][j] === this.EMPTY) {
-                        continue;
-                    }
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                
+                //score the column
+                if (j <= board[i].length - this.WINCONDITION) {
+                    score += arrScoreCalc(board[i].slice(j, j+this.WINCONDITION));
+                }
 
-                    //check the whole column
-                    if (j <= board[i].length - this.WINCONDITION) {
-                        let isWinning = true;
-                        for (let k = 0; k < winCond; k++) { // check player count 
-                            if (board[i][j] !== board[i][j+k]) isWinning = false;
-                        }
-                        for (let k = winCond; k < this.WINCONDITION; k++) {  // check empty count 
-                            if (board[i][j+k] !== this.EMPTY) isWinning = false;
-                        }
-                        if (isWinning) {
-                            score += ((board[i][j] === player ? 1 : -2) * winCond**(2*winCond));
-                        }
+                //score the horizontal
+                if (i <= board.length - this.WINCONDITION) {
+                    let arrToScore = [];
+                    for (let k = 0; k < this.WINCONDITION; k++) {
+                        arrToScore.push(board[i+k][j]);
                     }
+                    score += arrScoreCalc(arrToScore);
+                }
 
-                    //check rows
-                    if (i <= board.length - this.WINCONDITION) {
-                        let isWinning = true;
-                        for (let k = 0; k < winCond; k++) {
-                            if (board[i][j] !== board[i+k][j]) isWinning = false;
-                        }
-                        for (let k = winCond; k < this.WINCONDITION; k++) {  // check empty count 
-                            if (board[i+k][j] !== this.EMPTY) isWinning = false;
-                        }
-                        if (isWinning) {
-                            score += ((board[i][j] === player ? 1 : -2) * winCond**(2*winCond));
-                        }
+                //score the diag one
+                if (i <= board.length - this.WINCONDITION && j <= board[i].length - this.WINCONDITION) {
+                    let arrToScore = [];
+                    for (let k = 0; k < this.WINCONDITION; k++) {
+                        arrToScore.push(board[i+k][j+k]);
                     }
+                    score += arrScoreCalc(arrToScore);
+                }
 
-                    //check diagonal 1
-                    if (i <= board.length - this.WINCONDITION && j <= board[i].length - this.WINCONDITION) {
-                        let isWinning = true;
-                        for (let k = 0; k < winCond; k++) {
-                            if (board[i][j] !== board[i+k][j+k]) isWinning = false;
-                        }
-                        for (let k = winCond; k < this.WINCONDITION; k++) {  // check empty count 
-                            if (board[i+k][j+k] !== this.EMPTY) isWinning = false;
-                        }
-                        if (isWinning) {
-                            score += ((board[i][j] === player ? 1 : -2) * winCond**(2*winCond));
-                        }
+                //score the diag two
+                if (i <= board.length - this.WINCONDITION && j >= this.WINCONDITION - 1) {
+                    let arrToScore = [];
+                    for (let k = 0; k < this.WINCONDITION; k++) {
+                        arrToScore.push(board[i+k][j-k]);
                     }
-
-                    //check diagonal 2
-                    if (i <= board.length - this.WINCONDITION && j >= this.WINCONDITION - 1) {
-                        let isWinning = true;
-                        for (let k = 0; k < winCond; k++) {
-                            if (board[i][j] !== board[i+k][j-k]) isWinning = false;
-                        }
-                        for (let k = winCond; k < this.WINCONDITION; k++) {  // check empty count 
-                            if (board[i+k][j-k] !== this.EMPTY) isWinning = false;
-                        }
-                        if (isWinning) {
-                            score += ((board[i][j] === player ? 1 : -2) * winCond**(2*winCond));
-                        }
-                    }
+                    score += arrScoreCalc(arrToScore);
                 }
             }
         }
+
         return score;
-    
     }
 
     getAvailableTurns = (board) => {
@@ -249,8 +224,5 @@ class aiConnect4 {
         return boardCopy;   
     }
 };
-
-
-
 
 export default aiConnect4;

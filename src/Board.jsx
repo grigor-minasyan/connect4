@@ -36,8 +36,6 @@ class Board extends React.Component {
                         boardArr : copiedArr
                     })
                     return;
-                } else { // ai player
-                    
                 }
             }
         }
@@ -47,14 +45,18 @@ class Board extends React.Component {
         if (checkIfWinningReturn.isWinning) {
             console.log(`${checkIfWinningReturn.player} won`);
 
-            this.setState({
-                turn: RED,
-                boardArr : new Array(WIDTH).fill(new Array(HEIGHT).fill(EMPTY))
-            })
+            window.setTimeout(() => {
+                this.setState({
+                    turn: RED,
+                    boardArr : new Array(WIDTH).fill(new Array(HEIGHT).fill(EMPTY))
+                })
+            }, 2000);
             return;
         }
         if (this.state.turn === YELLOW) {
-            this.moveAI();
+            window.setTimeout(() => {
+                this.moveAI();
+            }, 100);
             return;
         }
     }
