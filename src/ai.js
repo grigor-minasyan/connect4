@@ -6,8 +6,9 @@ class aiConnect4 {
         this.WINCONDITION = WINCONDITION;
         this.width = width;
         this.height = height;
-        this.MAXDEPTH = 6;
+        this.MAXDEPTH = 7;
 
+        this.testScoring = this.testScoring.bind(this);
     };
 
     checkIfWinning = (boardArr, winCond = this.WINCONDITION) => {
@@ -87,7 +88,32 @@ class aiConnect4 {
         return board.every(el => el.length === this.height);
     }
 
-    minimax = (board, aiPlayer) => {        
+    testScoring = () => {
+        let boardArr = new Array(7).fill(new Array(6).fill(' '));
+        boardArr = this.dropPieceRetCopy(boardArr, 0, this.YELLOW);
+        boardArr = this.dropPieceRetCopy(boardArr, 3, this.YELLOW);
+        boardArr = this.dropPieceRetCopy(boardArr, 3, this.YELLOW);
+        boardArr = this.dropPieceRetCopy(boardArr, 3, this.YELLOW);
+        boardArr = this.dropPieceRetCopy(boardArr, 4, this.RED);
+        boardArr = this.dropPieceRetCopy(boardArr, 4, this.RED);
+        boardArr = this.dropPieceRetCopy(boardArr, 4, this.RED);
+        boardArr = this.dropPieceRetCopy(boardArr, 5, this.RED);
+        boardArr = this.dropPieceRetCopy(boardArr, 5, this.RED);
+        boardArr = this.dropPieceRetCopy(boardArr, 5, this.RED);
+        boardArr = this.dropPieceRetCopy(boardArr, 6, this.RED);
+        boardArr = this.dropPieceRetCopy(boardArr, 4, this.YELLOW);
+        boardArr = this.dropPieceRetCopy(boardArr, 4, this.YELLOW);
+        boardArr = this.dropPieceRetCopy(boardArr, 5, this.YELLOW);
+        // boardArr = this.dropPieceRetCopy(boardArr, 3, this.RED);
+
+        console.log(boardArr);
+        console.log(this.scoreCalculator(boardArr, this.YELLOW));
+        
+
+    }
+
+    minimax = (board, aiPlayer) => {       
+        // this.testScoring(); 
         if (!this.checkIfValidBoard(board)) {
             throw ('not a valid board');
         }
@@ -114,16 +140,21 @@ class aiConnect4 {
             for (const col of availableTurns) {
                 const newBoard = this.dropPieceRetCopy(board, col, player);
                 const childResult = minimaxInner(newBoard, aiPlayer, depth-1, !isMaxPlayer, col, alpha, beta);
+                // if (depth === this.MAXDEPTH) {
+                //     console.log(newBoard);
+                //     console.log(childResult);
+                //     console.log(col);
+                // }
                 if (isMaxPlayer) {
                     if (scoreObj.score < childResult.score) {
                         scoreObj.score = childResult.score;
-                        scoreObj.prevMove = childResult.prevMove;
+                        scoreObj.prevMove = col;
                     }
                     alpha = Math.max(alpha, scoreObj.score);
                 } else {
                     if (scoreObj.score > childResult.score) {
                         scoreObj.score = childResult.score;
-                        scoreObj.prevMove = childResult.prevMove;
+                        scoreObj.prevMove = col;
                     }
                     beta = Math.min(beta, scoreObj.score);
                 }
@@ -132,7 +163,7 @@ class aiConnect4 {
             return scoreObj;
         }
         // return [board, aiPlayer, 10, true];
-        return minimaxInner(board, aiPlayer, this.MAXDEPTH, false, -1, -Infinity, Infinity);
+        return minimaxInner(board, aiPlayer, this.MAXDEPTH, true, -1, -Infinity, Infinity);
         // return this.scoreCalculator(board, aiPlayer);
     }
 
