@@ -12,6 +12,10 @@ module.exports = {
    devServer: {
       historyApiFallback: true,
       contentBase: [path.resolve(__dirname, '/build'), path.resolve(__dirname + '/public') ],
+      proxy: {
+        '/auth': 'http://localhost:3000',
+        '/api': 'http://localhost:3000',
+      },
    },
    module: {
       rules: [

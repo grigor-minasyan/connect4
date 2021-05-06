@@ -1,3 +1,5 @@
+$mainBgColor : #424242;
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -9,35 +11,56 @@ body {
 
   
 .main {
-    background-color: #e9e9e9;
+    background-color: $mainBgColor;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     font-size: calc(10px + 2vmin);
-    color: black;
+    color: rgb(233, 233, 233);
+    text-align: center;
 }
 
+a {
+    color: #b6b6b6;
+    &:hover {
+        color: lighten(#b6b6b6, 20%);
+    }
+}
 
-.boardTable td {
+.downArrCell {
+    border-width: 0;
+    width: max(2em, 50px);
+    height: max(2em, 50px);
+    margin: 0;
+    padding: 0;
+    &:hover {
+        background: darken($mainBgColor, 10%);
+    }
+}
+
+.boardCells {
     border-width: 5px;
     border-style: solid;
     // border-color: white;
-    border-image: repeating-linear-gradient(45deg, #7360df, #8676e0, #7360df 50px) 30;
+    border-image: repeating-linear-gradient(45deg, #7360df, #8676e0, #7360df 50px) 20;
     // border-image-repeat: repeat;
     margin: 0;
     width: max(2em, 50px);
     height: max(2em, 50px);
     box-shadow: inset 0.2em 0.2em 0.4em rgb(175, 175, 175);
     padding: 0;
-
+    &.winning {
+        background: #ab0456;
+    }
 }
+
 
 .boardTable {
     border-width: 5px;
     border-style: solid;
-    border-image: repeating-linear-gradient(45deg, #7360df, #8676e0, #7360df 50px) 30;
+    border-image: repeating-linear-gradient(45deg, #7360df, #8676e0, #7360df 50px) 20;
     border-spacing: 0;
     text-align: center;
     box-shadow: 0.2em 0.2em 0.4em rgb(175, 175, 175);

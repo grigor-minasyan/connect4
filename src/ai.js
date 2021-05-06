@@ -6,7 +6,7 @@ class aiConnect4 {
         this.WINCONDITION = WINCONDITION;
         this.width = width;
         this.height = height;
-        this.MAXDEPTH = 7;
+        this.MAXDEPTH = 6;
 
     };
 
@@ -20,56 +20,68 @@ class aiConnect4 {
 
                 //check the whole column
                 if (j <= boardArr[i].length - winCond) {
+                    const retWinArr = [];
                     let isWinning = true;
                     for (let k = 0; k < winCond; k++) {
+                        retWinArr.push([i, j+k]);
                         if (boardArr[i][j] !== boardArr[i][j+k]) isWinning = false;
                     }
                     if (isWinning) {
                         return {
                             isWinning,
-                            player: boardArr[i][j]
+                            player: boardArr[i][j],
+                            retWinArr
                         }
                     }
                 }
 
                 //check rows
                 if (i <= boardArr.length - winCond) {
+                    const retWinArr = [];
                     let isWinning = true;
                     for (let k = 0; k < winCond; k++) {
+                        retWinArr.push([i+k, j]);
                         if (boardArr[i][j] !== boardArr[i+k][j]) isWinning = false;
                     }
                     if (isWinning) {
                         return {
                             isWinning,
-                            player: boardArr[i][j]
+                            player: boardArr[i][j],
+                            retWinArr
                         }
                     }
                 }
 
                 //check diagonal 1
                 if (i <= boardArr.length - winCond && j <= boardArr[i].length - winCond) {
+                    const retWinArr = [];
                     let isWinning = true;
                     for (let k = 0; k < winCond; k++) {
+                        retWinArr.push([i+k, j+k]);
                         if (boardArr[i][j] !== boardArr[i+k][j+k]) isWinning = false;
                     }
                     if (isWinning) {
                         return {
                             isWinning,
-                            player: boardArr[i][j]
+                            player: boardArr[i][j],
+                            retWinArr
                         }
                     }
                 }
 
                 //check diagonal 2
                 if (i <= boardArr.length - winCond && j >= winCond - 1) {
+                    const retWinArr = [];
                     let isWinning = true;
                     for (let k = 0; k < winCond; k++) {
+                        retWinArr.push([i+k, j-k]);
                         if (boardArr[i][j] !== boardArr[i+k][j-k]) isWinning = false;
                     }
                     if (isWinning) {
                         return {
                             isWinning,
-                            player: boardArr[i][j]
+                            player: boardArr[i][j],
+                            retWinArr
                         }
                     }
                 }
@@ -91,6 +103,7 @@ class aiConnect4 {
         if (!this.checkIfValidBoard(board)) {
             throw ('not a valid board');
         }
+
         const minimaxInner = (board, aiPlayer, depth, isMaxPlayer, prevMove, alpha, beta) => {
             // console.log('minmax called at depth ', depth);
             const humanPlayer = (aiPlayer === this.RED ? this.YELLOW : this.RED);
@@ -201,8 +214,22 @@ class aiConnect4 {
     getAvailableTurns = (board) => {
 
         const availableTurns = [];
+
+
+
         for (let i = 0; i < this.width; i++) {
-            if (board[i].indexOf(this.EMPTY) > -1) availableTurns.push(i);
+
+            let colIsEmpty = false;
+            let index = 0;
+            while(index < board[i].length) {
+                if (board[i][index] === this.EMPTY) {
+                    colIsEmpty = true;
+                    break;
+                }
+                index++;
+            }
+
+            if (colIsEmpty) availableTurns.push(i);
         }
         return availableTurns;
     }
