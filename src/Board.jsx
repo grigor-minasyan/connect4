@@ -14,8 +14,8 @@ const downArrowSrc = './static/down_arrow.png';
 class Board extends React.Component {
     constructor(props) {
         super(props);
-        let isWon = false;
-        let scoreInterval;
+        this.isWon = false;
+        this.scoreInterval;
         this.state = {
             width: WIDTH,
             height: HEIGHT,

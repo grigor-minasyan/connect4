@@ -9,7 +9,7 @@ class App extends React.Component {
                 if (data.googleid) {
                     document.getElementById('loginBox').innerHTML = `Welcome back, <b>${data.displayname}</b> (<a href="/auth/logout">Not you?</a>). Your high score is <b id='userHighScore'>${data.highscore}</b>`;
                 } else {
-                    document.getElementById('loginBox').innerHTML = '<a href="/auth/google">Sign In with Google to save your high score</a>';
+                    document.getElementById('loginBox').innerHTML = `<a href="/auth/google">Sign In with Google to save your high score</a>. Your current high score is <b id='userHighScore'>${data.highscore}</b>`;
                 }
                 console.log(data)
             });
