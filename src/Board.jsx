@@ -100,7 +100,7 @@ class Board extends React.Component {
         if (this.state.turn === YELLOW) {
             window.setTimeout(() => {
                 this.moveAI();
-            }, 20);
+            }, 15);
             return;
         }
     }
