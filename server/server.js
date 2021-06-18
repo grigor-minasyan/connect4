@@ -61,7 +61,7 @@ isUserAuthenticated = (req, res, next) => {
 };
 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.sendFile(__dirname + '/../build/index.html');
 });
 
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
