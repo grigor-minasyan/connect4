@@ -1,66 +1,57 @@
 {
-  "name": "connect4",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "NODE_ENV=production node server/server.js",
-    "dev": "NODE_ENV=development webpack serve --mode=development & NODE_ENV=development nodemon server/server.js",
-    "prod": "NODE_ENV=production webpack --mode=production"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/grigor-minasyan/connect4.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/grigor-minasyan/connect4/issues"
-  },
-  "homepage": "https://github.com/grigor-minasyan/connect4#readme",
-  "dependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/preset-env": "^7.14.0",
-    "@babel/preset-react": "^7.13.13",
-    "babel-loader": "^8.2.2",
-    "cookie-session": "^1.4.0",
-    "css-loader": "^5.2.4",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.3.1",
-    "nodemon": "^2.0.7",
-    "passport": "^0.4.1",
-    "passport-google-oauth": "^2.0.0",
-    "path": "^0.12.7",
-    "pg": "^8.6.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "sass": "^1.32.12",
-    "sass-loader": "^11.0.1",
-    "sockjs-client": "^1.5.1",
-    "style-loader": "^2.0.0",
-    "webpack": "^5.36.2",
-    "webpack-cli": "^4.6.0",
-    "webpack-dev-server": "^3.11.2"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.14.0",
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/preset-env": "^7.14.0",
-    "@babel/preset-react": "^7.13.13",
-    "babel-loader": "^8.2.2",
-    "css-loader": "^5.2.4",
-    "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.3.1",
-    "path": "^0.12.7",
-    "sass": "^1.32.12",
-    "sass-loader": "^11.0.1",
-    "sockjs-client": "^1.5.1",
-    "style-loader": "^2.0.0",
-    "webpack": "^5.36.2",
-    "webpack-cli": "^4.6.0",
-    "webpack-dev-server": "^3.11.2"
-  }
+    "name": "connect4",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "NODE_ENV=production node server/server.js",
+        "dev": "NODE_ENV=development webpack serve --mode=development",
+        "prod": "NODE_ENV=production webpack --mode=production"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/grigor-minasyan/connect4.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/grigor-minasyan/connect4/issues"
+    },
+    "homepage": "https://github.com/grigor-minasyan/connect4#readme",
+    "dependencies": {
+        "@babel/core": "^7.14.0",
+        "@babel/plugin-proposal-class-properties": "^7.13.0",
+        "@babel/preset-env": "^7.14.0",
+        "@babel/preset-react": "^7.13.13",
+        "babel-loader": "^8.2.2",
+        "css-loader": "^5.2.4",
+        "file-loader": "^6.2.0",
+        "html-webpack-plugin": "^5.3.1",
+        "lodash": "^4.17.21",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "sass": "^1.32.12",
+        "sass-loader": "^11.0.1",
+        "style-loader": "^2.0.0",
+        "webpack": "^5.36.2",
+        "webpack-cli": "^4.6.0",
+        "webpack-dev-server": "^3.11.2"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.14.0",
+        "@babel/plugin-proposal-class-properties": "^7.13.0",
+        "@babel/preset-env": "^7.14.0",
+        "@babel/preset-react": "^7.13.13",
+        "babel-loader": "^8.2.2",
+        "css-loader": "^5.2.4",
+        "file-loader": "^6.2.0",
+        "html-webpack-plugin": "^5.3.1",
+        "sass": "^1.32.12",
+        "sass-loader": "^11.0.1",
+        "sockjs-client": "^1.5.1",
+        "style-loader": "^2.0.0",
+        "webpack": "^5.36.2",
+        "webpack-cli": "^4.6.0",
+        "webpack-dev-server": "^3.11.2"
+    }
 }
